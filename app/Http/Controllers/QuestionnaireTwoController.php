@@ -45,10 +45,8 @@ public function store(Request $request)
         'housekeeper_name' => 'required|string|max:255',
         'unit_number' => 'required|string|max:255',
         'service_type' => 'required|string',
-        'status_remarks' => 'required|string',
         'bed_linen' => 'nullable|array',
         'bath_linen' => 'nullable|array',
-        'image' => 'nullable|image|max:2048',
         'task_date' => 'required|date',
     ]);
 
@@ -57,16 +55,12 @@ public function store(Request $request)
         return redirect()->back()->withErrors($request->session()->get('errors'))->withInput();
     }
 
-    // Handle image upload
-    if ($request->hasFile('image')) {
-        $validated['image'] = $request->file('image')->store('uploads', 'public');
-    }
-
     $validated['bed_linen'] = json_encode($request->bed_linen);
     $validated['bath_linen'] = json_encode($request->bath_linen);
    
 
     $validated['user_id'] = Auth::id();
+    $validated['status_remarks'] = "Null";
 
     Questionnaire2::create($validated);
 

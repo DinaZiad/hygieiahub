@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Admin Dashboard</title>
+  <link rel="icon" type="image/x-icon" href="/images/favicon.ico">  
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
   
@@ -145,9 +146,9 @@
             <i class="fas fa-broom me-2"></i>CleaningApp Admin
         </a>
         <div class="d-flex">
-            <form method="POST" class="confirm-delete-form" action="{{ route('logout') }} ">
+            <form method="POST" action="{{ route('logout') }} ">
                 @csrf
-                <button type="submit" class="btn btn-outline-light btn-sm">
+                <button type="submit" class="btn btn-outline-light btn-sm confirm-logout">
                     <i class="fas fa-sign-out-alt me-1"></i> Logout
                 </button>
             </form>
@@ -243,7 +244,7 @@
                 <form action="{{ route('users.updateRole', $user->id) }}" method="POST" class="d-flex">
                   @csrf
                   @method('PATCH')
-                  <select name="role" class="form-select form-select-sm" onchange="this.form.submit()">
+                  <select name="role" class="form-select form-select-sm" onchange="this.form.submit()" style="min-width: 200px;">
                     <option value="" {{ !$user->role ? 'selected' : '' }}>Select Role</option>
                     <option value="housekeeper" {{ $user->role == 'housekeeper' ? 'selected' : '' }}>Housekeeper</option>
                     <option value="supervisor" {{ $user->role == 'supervisor' ? 'selected' : '' }}>Supervisor</option>
@@ -275,7 +276,6 @@
                     <th>Housekeeper Name</th>
                     <th>Unit Number</th>
                     <th>Service Type</th>
-                    <th>Status Remarks</th>
                     <th>Task Date</th>
                     <th>Action</th>
                 </tr>
@@ -287,7 +287,6 @@
                         <td>{{ $entry->housekeeper_name }}</td>
                         <td>{{ $entry->unit_number }}</td>
                         <td>{{ $entry->service_type }}</td>
-                        <td>{{ $entry->status_remarks }}</td>
                         <td>{{ $entry->task_date }}</td>
                         <td>
                             <form action="{{ route('questionnaire1.delete', $entry->id) }}" method="POST" class="confirm-delete-form">
@@ -346,7 +345,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-
 <script>
     document.querySelectorAll('.confirm-delete-form').forEach(form => {
       form.addEventListener('submit', function(e) {
@@ -359,6 +357,27 @@
           confirmButtonColor: '#d33',
           cancelButtonColor: '#3085d6',
           confirmButtonText: 'Yes, delete it!',
+          cancelButtonText: 'Cancel'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            form.submit();
+          }
+        });
+      });
+    });
+
+    document.querySelectorAll('.confirm-logout').forEach(button => {
+      button.addEventListener('click', function(e) {
+        e.preventDefault();
+        const form = this.closest('form');
+        Swal.fire({
+          title: 'Logout?',
+          text: "Are you sure you want to log out?",
+          icon: 'question',
+          showCancelButton: true,
+          confirmButtonColor: '#3085d6',
+          cancelButtonColor: '#d33',
+          confirmButtonText: 'Yes, log out',
           cancelButtonText: 'Cancel'
         }).then((result) => {
           if (result.isConfirmed) {

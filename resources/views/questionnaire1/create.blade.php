@@ -7,6 +7,7 @@
     <meta charset="UTF-8">
     <title>Unit Cleaning Checklist</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -281,7 +282,7 @@
                 </div>
             @endif
 
-            <form method="POST" action="{{ route('questionnaire1.store') }}" enctype="multipart/form-data">
+            <form method="POST" action="{{ route('questionnaire1.store') }}">
                 @csrf
 
                 <div class="accordion mb-4" id="formAccordion">
@@ -297,14 +298,14 @@
                                 <div class="row g-3">
                                     <!-- Row 1: Housekeeper Name and Unit Number -->
                                     <div class="col-6 col-md-6">
-                                        <label class="form-label">Housekeeper Name</label>
+                                        <label class="form-label"> Name</label>
                                         <input type="text" name="housekeeper_name" class="form-control" value="{{ Auth::user()->name }}" readonly style="background-color: #f0f4ff; border: 1px solid rgba(67, 97, 238, 0.2);">
                                     </div>
                                     <div class="col-6 col-md-6">
                                         <label class="form-label">Unit Number</label>
                                         <input type="text" name="unit_number" class="form-control">
                                     </div>
-                                    <!-- Row 2: Service Type and Status Remarks -->
+                                    <!-- Row 2: Service Type and Task Date -->
                                     <div class="col-6 col-md-6">
                                         <label class="form-label">Service Type</label>
                                         <select name="service_type" class="form-select">
@@ -314,27 +315,10 @@
                                         </select>
                                     </div>
                                     <div class="col-6 col-md-6">
-                                        <label class="form-label">Status Remarks</label>
-                                        <select name="status_remarks" class="form-select">
-                                            <option value="Completed">Completed</option>
-                                            <option value="DND">DND</option>
-                                            <option value="Vacant">Vacant</option>
-                                            <option value="Sleep Out">Sleep Out</option>
-                                            <option value="Service Rejected">Service Rejected</option>
-                                            <option value="Under Maintenance">Under Maintenance</option>
-                                            <option value="RFO">RFO</option>
-                                            <option value="Post Checkout">Post Checkout</option>
-                                            <option value="Other">Other</option>
-                                        </select>
+                                        <label class="form-label">Task Date</label>
+                                       <input type="date" name="task_date" class="form-control" value="{{ date('Y-m-d') }}">
                                     </div>
-                                    <!-- Row 3: Upload Image and Task Date -->
                                     <div class="col-12 col-md-12">
-                                        <label class="form-label">Upload Image</label>
-                                        <input type="file" name="image" class="form-control">
-                                    </div>
-
-
-                                    <div class="col-6 col-md-6">
                                 <label class="form-label">Supervisor</label>
                                 <select name="supervisor_id" class="form-select">
                                     <option value="">Select Supervisor</option>
@@ -343,10 +327,6 @@
                                     @endforeach
                                 </select>
                             </div>
-                                    <div class="col-6 col-md-6">
-                                        <label class="form-label">Task Date</label>
-                                       <input type="date" name="task_date" class="form-control" value="{{ date('Y-m-d') }}">
-                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -370,11 +350,7 @@
     <div class="card h-100 text-center">
         <div class="card-body p-2">
             <p class="mb-2 text-truncate" style="height: 2.5rem;">{{ $item }}</p>
-            <div class="d-flex justify-content-center align-items-center">
-                <button type="button" class="btn btn-outline-primary btn-circle minus-btn">-</button>
-                <input type="number" name="provided_items[{{ $item }}]" value="0" class="form-control number-input mx-1" min="0">
-                <button type="button" class="btn btn-outline-primary btn-circle plus-btn">+</button>
-            </div>
+            <input type="number" name="provided_items[{{ $item }}]" value="0" class="form-control text-center" min="0" style="width: 80px; margin: 0 auto;">
         </div>
     </div>
 </div>
@@ -404,11 +380,7 @@
     <div class="card h-100 text-center">
         <div class="card-body p-2">
             <p class="mb-2 text-truncate" style="height: 2.5rem;">{{ $item }}</p>
-            <div class="d-flex justify-content-center align-items-center">
-                <button type="button" class="btn btn-outline-primary btn-circle minus-btn">-</button>
-                <input type="number" name="removed_items[{{ $item }}]" value="0" class="form-control number-input mx-1" min="0">
-                <button type="button" class="btn btn-outline-primary btn-circle plus-btn">+</button>
-            </div>
+            <input type="number" name="removed_items[{{ $item }}]" value="0" class="form-control text-center" min="0" style="width: 80px; margin: 0 auto;">
         </div>
     </div>
 </div>
@@ -602,24 +574,6 @@
                         parentButton.setAttribute('aria-expanded', 'false');
                     }
                 });
-            });
-        });
-
-        // Handle plus and minus buttons with optimized event delegation
-        const accordionBody = document.querySelectorAll('.accordion-body');
-        accordionBody.forEach(body => {
-            body.addEventListener('click', function(e) {
-                const target = e.target;
-                if (target.classList.contains('plus-btn') || target.classList.contains('minus-btn')) {
-                    const input = target.parentElement.querySelector('input');
-                    let currentValue = parseInt(input.value) || 0;
-
-                    if (target.classList.contains('plus-btn')) {
-                        input.value = currentValue + 1;
-                    } else if (target.classList.contains('minus-btn') && currentValue > 0) {
-                        input.value = currentValue - 1;
-                    }
-                }
             });
         });
 

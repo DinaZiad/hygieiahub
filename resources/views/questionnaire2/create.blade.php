@@ -7,6 +7,7 @@
     <meta charset="UTF-8">
     <title>Linen Provision Form</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -312,7 +313,7 @@
                                         <input type="text" name="unit_number" class="form-control">
                                     </div>
                                     <!-- Row 2: Service Type and Status Remarks -->
-                                    <div class="col-12 col-md-12">
+                                    <div class="col-6 col-md-6">
                                         <label class="form-label">Service Type</label>
                                         <select name="service_type" class="form-select">
                                             <option value="Scheduled Cleaning">Scheduled Cleaning</option>
@@ -320,29 +321,12 @@
                                             <option value="Paid Service">Paid Service</option>
                                         </select>
                                     </div>
-                                    <div class="col-6 col-md-6">
-                                        <label class="form-label">Status Remarks</label>
-                                        <select name="status_remarks" class="form-select">
-                                            <option value="Completed">Completed</option>
-                                            <option value="DND">DND</option>
-                                            <option value="Vacant">Vacant</option>
-                                            <option value="Sleep Out">Sleep Out</option>
-                                            <option value="Service Rejected">Service Rejected</option>
-                                            <option value="Under Maintenance">Under Maintenance</option>
-                                            <option value="RFO">RFO</option>
-                                            <option value="Post Checkout">Post Checkout</option>
-                                            <option value="Other">Other</option>
-                                        </select>
-                                    </div>
+                                  
                                     <div class="col-6 col-md-6">
                                         <label class="form-label">Task Date</label>
                                         <input type="date" name="task_date" class="form-control" value="{{ date('Y-m-d') }}">
                                     </div>
-                                    <!-- Row 3: Upload Image and Task Date -->
-                                    <div class="col-12 col-md-12">
-                                        <label class="form-label">Upload Image</label>
-                                        <input type="file" name="image" class="form-control">
-                                    </div>
+                                 
                                    
                                 </div>
                             </div>
@@ -361,17 +345,13 @@
                                 <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 g-2">
                                     @foreach($items['Bed Linen'] as $item)
                                     <div class="col">
-    <div class="card h-100 text-center">
-        <div class="card-body p-2">
-            <p class="mb-2 text-truncate" style="height: 2.5rem;">{{ $item }}</p>
-            <div class="d-flex justify-content-center align-items-center">
-                <button type="button" class="btn btn-outline-primary btn-circle minus-btn">-</button>
-                <input type="number" name="bed_linen[{{ $item }}]" value="0" class="form-control number-input mx-1" min="0">
-                <button type="button" class="btn btn-outline-primary btn-circle plus-btn">+</button>
-            </div>
-        </div>
-    </div>
-</div>
+                                        <div class="card h-100 text-center">
+                                            <div class="card-body p-2">
+                                                <p class="mb-2 text-truncate" style="height: 2.5rem;">{{ $item }}</p>
+                                                <input type="number" name="bed_linen[{{ $item }}]" value="0" class="form-control text-center" min="0" style="width: 80px; margin: 0 auto;">
+                                            </div>
+                                        </div>
+                                    </div>
                                     @endforeach
                                 </div>
                             </div>
@@ -393,11 +373,7 @@
                                             <div class="card h-100 text-center">
                                                 <div class="card-body p-2">
                                                     <p class="mb-2">{{ $item }}</p>
-                                                    <div class="d-flex justify-content-center align-items-center">
-                                                        <button type="button" class="btn btn-outline-primary btn-circle minus-btn">-</button>
-                                                        <input type="number" name="bath_linen[{{ $item }}]" value="0" class="form-control number-input mx-1" min="0">
-                                                        <button type="button" class="btn btn-outline-primary btn-circle plus-btn">+</button>
-                                                    </div>
+                                                    <input type="number" name="bath_linen[{{ $item }}]" value="0" class="form-control text-center" min="0" style="width: 80px; margin: 0 auto;">
                                                 </div>
                                             </div>
                                         </div>
@@ -448,24 +424,6 @@
                         parentButton.setAttribute('aria-expanded', 'false');
                     }
                 });
-            });
-        });
-
-        // Handle plus and minus buttons with optimized event delegation
-        const accordionBody = document.querySelectorAll('.accordion-body');
-        accordionBody.forEach(body => {
-            body.addEventListener('click', function(e) {
-                const target = e.target;
-                if (target.classList.contains('plus-btn') || target.classList.contains('minus-btn')) {
-                    const input = target.parentElement.querySelector('input');
-                    let currentValue = parseInt(input.value) || 0;
-
-                    if (target.classList.contains('plus-btn')) {
-                        input.value = currentValue + 1;
-                    } else if (target.classList.contains('minus-btn') && currentValue > 0) {
-                        input.value = currentValue - 1;
-                    }
-                }
             });
         });
 

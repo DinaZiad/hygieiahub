@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Housekeeping Submissions</title>
+    <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <!-- SweetAlert2 CSS -->
@@ -357,8 +358,8 @@
                                                 @if($entry->status != 'Approved' && $entry->status != 'Inspected')
                                                     <button type="button" class="btn btn-primary btn-sm d-block d-sm-inline mb-2" onclick="confirmApproval({{ $entry->id }}, 'Approved')">
                                                         <i class="fas fa-check-circle me-1"></i> Approve
-                                                    </button>
-                                                    <button type="button" class="btn btn-warning btn-sm d-block d-sm-inline mb-2" onclick="({{ $entry->id }}, 'Inspected')">
+                                                    </button><link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+                                                    <button type="button" class="btn btn-warning btn-sm d-block d-sm-inline mb-2" onclick="confirmApproval({{ $entry->id }}, 'Inspected')">
                                                         <i class="fas fa-broom me-1"></i> Inspect
                                                     </button>
                                                 @else

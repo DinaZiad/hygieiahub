@@ -49,11 +49,9 @@ class QuestionnaireOneController extends Controller
             'housekeeper_name' => 'required|string|max:255',
             'unit_number' => 'required|string|max:255',
             'service_type' => 'required|string',
-            'status_remarks' => 'required|string',
             'provided_items' => 'nullable|array',
             'removed_items' => 'nullable|array',
             'tasks' => 'nullable|array',
-            'image' => 'nullable|image|max:2048',
             'task_date' => 'required|date',
             'supervisor_id' => 'required|exists:users,id',
         ]);
@@ -63,11 +61,6 @@ class QuestionnaireOneController extends Controller
             return redirect()->back()->withErrors($request->session()->get('errors'))->withInput();
         }
 
-        // Handle image upload
-        if ($request->hasFile('image')) {
-            $validated['image'] = $request->file('image')->store('uploads', 'public');
-        }
-
         $validated['provided_items'] = json_encode($request->provided_items);
         $validated['removed_items'] = json_encode($request->removed_items);
         $validated['bathroom_tasks'] = json_encode($request->tasks['bathroom'] ?? []);
@@ -75,6 +68,7 @@ class QuestionnaireOneController extends Controller
         $validated['bedroom_tasks'] = json_encode($request->tasks['bedroom'] ?? []);
 
         $validated['user_id'] = Auth::id();
+        $validated['status_remarks'] = "Null";
         $validated['supervisor_id'] = $request->supervisor_id;
         QuestionnaireOne::create($validated);
 
@@ -111,6 +105,22 @@ class QuestionnaireOneController extends Controller
         $housekeepers = \App\Models\User::where('role', 'housekeeper')->get();
         
         return view('supervisor.questionnaire1.index', compact('entries', 'housekeepers'));
+    }
+
+
+    public function updateStatus(Request $request, $id)
+    {
+        $questionnaire = QuestionnaireOne::findOrFail($id);
+        
+        // Ensure the user has permission to approve
+        if ($questionnaire->supervisor_id !== Auth::id()) {
+            return redirect()->back()->with('error', 'You do not have permission to approve this questionnaire');
+        }
+        
+        $questionnaire->status = $request->status;
+        $questionnaire->save();
+        
+        return redirect()->back()->with('success', 'Status updated successfully');
     }
 
 }
