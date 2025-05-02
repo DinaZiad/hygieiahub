@@ -89,6 +89,13 @@ Route::get('/dataa', function () {
     return response()->json($data);
 });
 
+
+Route::get('/clear-config', function () {
+    Artisan::call('config:clear');
+    Artisan::call('config:cache');
+    return 'Config cache cleared and rebuilt!';
+});
+
 Route::get('/export', [AdminController::class, 'export'])->name('export.report');
 
 require __DIR__.'/auth.php';
