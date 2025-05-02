@@ -225,7 +225,7 @@
     <div class="container-fluid py-3">
         <div class="d-flex justify-content-between align-items-center mb-3 flex-wrap">
             <h2 class="h4 font-weight-bold mb-2">
-                <i class="fas fa-broom me-2"></i>Housekeeping Submissions
+                <i class="fas fa-broom me-2"></i>Cleaned Units
             </h2>
         </div>
         @if(session('success'))

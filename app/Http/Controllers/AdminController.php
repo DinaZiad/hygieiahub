@@ -12,25 +12,41 @@ use Maatwebsite\Excel\Facades\Excel;
 
 class AdminController extends Controller
 {
-    function index()
+    function index(Request $request)
     {
 
          $users = User::all()->where('role', '!=', 'admin');
-         $ques1 = QuestionnaireOne::all();
-         $ques2 = Questionnaire2::all();
+         $search = $request->input('search');
+         // Search for both questionnaires by unit number
+         $ques1 = $search ? 
+            QuestionnaireOne::where('unit_number', 'like', '%' . $search . '%')->get() : 
+            QuestionnaireOne::all();
+            
+         $ques2 = $search ? 
+            Questionnaire2::where('unit_number', 'like', '%' . $search . '%')->get() : 
+            Questionnaire2::all();
+
          $inspectedQues = QuestionnaireOne::where('status', 'Inspected')->count();
          $approvedQues = Questionnaire2::where('status', 'Approved')->count();
          $deliveredQues = Questionnaire2::where('status', 'Delivered')->count();
          $partiallyDeliveredQues = Questionnaire2::where('status', 'Partially Delivered')->count();
 
-        return view('admin.dash', data : [
+         // Get today's submissions count
+         $today = Carbon::today();
+         $todayQues1 = QuestionnaireOne::whereDate('created_at', $today)->count();
+         $todayQues2 = Questionnaire2::whereDate('created_at', $today)->count();
+
+        return view('admin.dash', [
             'users' => $users,
             'ques1' => $ques1,
             'ques2' => $ques2,
             'inspectedQues' => $inspectedQues,
             'approvedQues' => $approvedQues,
             'deliveredQues' => $deliveredQues,
-            'partiallyDeliveredQues' => $partiallyDeliveredQues
+            'partiallyDeliveredQues' => $partiallyDeliveredQues,
+            'todayQues1' => $todayQues1,
+            'todayQues2' => $todayQues2,
+            'search' => $search
         ]);
     }
 

@@ -134,7 +134,7 @@
                 <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="{{route('questionnaire1.index')}}">
-                            <i class="fa-solid fa-grid-horizontal"></i> Dashboard
+                            <i class="fa-solid fa-grid-horizontal"></i> Requested Linen
                         </a>
                     </li>
                     <li class="nav-item">
@@ -150,7 +150,7 @@
     <div class="container-fluid py-4">
         <div class="d-flex justify-content-between align-items-center mb-4">
             <h2 class="h4 font-weight-bold mb-0">
-                <i class="fas fa-broom me-2"></i>Linen Provision Submissions
+                <i class="fas fa-broom me-2"></i>Requested Linen
             </h2>
             {{-- <div class="d-flex">
                 <button class="btn btn-primary btn-sm me-2">

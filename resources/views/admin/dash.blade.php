@@ -219,125 +219,242 @@
     </div>
   </div>
 
-  <h2 class="mt-5">Users</h2>
-
-  <div class="table-responsive">
-    <table class="table table-bordered align-middle">
-      <thead>
-        <tr>
-          <th>#</th>
-          <th>Name</th>
-          <th>Email</th>
-          <th>Role</th>
-          <th>Action</th>
-        </tr>
-      </thead>
-      <tbody>
-        @foreach($users as $index => $user)
-          <tr>
-            <td>{{ $index + 1 }}</td>
-            <td>{{ $user->name }}</td>
-            <td>{{ $user->email }}</td>
-            <td>{{ $user->role }}</td>
-            <td>
-              <div class="d-flex gap-2">
-                <form action="{{ route('users.updateRole', $user->id) }}" method="POST" class="d-flex">
-                  @csrf
-                  @method('PATCH')
-                  <select name="role" class="form-select form-select-sm" onchange="this.form.submit()" style="min-width: 200px;">
-                    <option value="" {{ !$user->role ? 'selected' : '' }}>Select Role</option>
-                    <option value="housekeeper" {{ $user->role == 'housekeeper' ? 'selected' : '' }}>Housekeeper</option>
-                    <option value="supervisor" {{ $user->role == 'supervisor' ? 'selected' : '' }}>Supervisor</option>
-                    <option value="laundry" {{ $user->role == 'laundry' ? 'selected' : '' }}>Laundry</option>
-                  </select>
-                </form>
-                <form action="{{ route('users.delete', $user->id) }}" method="POST" class="confirm-delete-form">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit" class="btn btn-danger btn-sm">
-                      <i class="fas fa-trash"></i>
-                    </button>
-                  </form>
-                  
+  <div class="row g-3 mt-4">
+  <!-- Card 1: Today's Submissions -->
+  <div class="col-12 col-md-6 mb-4">
+    <div class="card h-100">
+      <div class="card-header">
+        <h5 class="mb-0">Today's Submissions</h5>
+      </div>
+      <div class="card-body">
+        <div class="row g-3">
+          <!-- Cleaned Units -->
+          <div class="col-6">
+            <div class="d-flex align-items-center">
+              <div class="me-2">
+                <i class="fas fa-house-user text-primary" style="font-size: 2rem;"></i>
               </div>
-            </td>
-          </tr>
-        @endforeach
-      </tbody>
-    </table>
+              <div>
+                <h6 class="mb-1 small">Cleaned Units</h6>
+                <p class="mb-0 text-muted small">{{ $todayQues1 }} submissions</p>
+              </div>
+            </div>
+          </div>
+          <!-- Requested Linen -->
+          <div class="col-6">
+            <div class="d-flex align-items-center">
+              <div class="me-2">
+                <i class="fas fa-bed text-success" style="font-size: 2rem;"></i>
+              </div>
+              <div>
+                <h6 class="mb-1 small">Requested Linen</h6>
+                <p class="mb-0 text-muted small">{{ $todayQues2 }} submissions </p>
+                
+                
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <h2 class="mt-4 text-center text-md-start">Questionnaire One</h2>
-    <div class="table-responsive">
-        <table class="table table-bordered">
-            <thead>
-                <tr>
-                    <th>#</th>
-                    <th>Housekeeper Name</th>
-                    <th>Unit Number</th>
-                    <th>Service Type</th>
-                    <th>Task Date</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($ques1 as $index => $entry)
-                    <tr>
-                        <td>{{ $index + 1 }}</td>
-                        <td>{{ $entry->housekeeper_name }}</td>
-                        <td>{{ $entry->unit_number }}</td>
-                        <td>{{ $entry->service_type }}</td>
-                        <td>{{ $entry->task_date }}</td>
-                        <td>
-                            <form action="{{ route('questionnaire1.delete', $entry->id) }}" method="POST" class="confirm-delete-form">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash me-1"></i> Delete</button>
-                              </form>
-                              
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
+  <!-- Card 2: Total Submissions -->
+  <div class="col-12 col-md-6 mb-4">
+    <div class="card h-100">
+      <div class="card-header">
+        <h5 class="mb-0">Total Submissions</h5>
+      </div>
+      <div class="card-body">
+        <div class="row g-3">
+          <!-- Cleaned Units Total -->
+          <div class="col-6">
+            <div class="d-flex align-items-center">
+              <div class="me-2">
+                <i class="fas fa-house-user text-primary" style="font-size: 2rem;"></i>
+              </div>
+              <div>
+                <h6 class="mb-1 small">Cleaned Units</h6>
+                <p class="mb-0 text-muted small">{{ $ques1->count() }} total submissions</p>
+              </div>
+            </div>
+          </div>
+          <!-- Requested Linen Total -->
+          <div class="col-6">
+            <div class="d-flex align-items-center">
+              <div class="me-2">
+                <i class="fas fa-bed text-success" style="font-size: 2rem;"></i>
+              </div>
+              <div>
+                <h6 class="mb-1 small">Requested Linen</h6>
+                <p class="mb-0 text-muted small">{{ $ques2->count() }} total submissions</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
+</div>
 
-    <h2 class="mt-4 text-center text-md-start">Questionnaire Two</h2>
-    <div class="table-responsive">
-        <table class="table table-bordered">
-            <thead>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body">
+
+
+
+        <h2 class="mt-5">Users</h2>
+
+<div class="table-responsive">
+  <table class="table table-bordered align-middle">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      @foreach($users as $index => $user)
+        <tr>
+          <td>{{ $index + 1 }}</td>
+          <td>{{ $user->name }}</td>
+          <td>{{ $user->email }}</td>
+          <td>{{ $user->role }}</td>
+          <td>
+            <div class="d-flex gap-2">
+              <form action="{{ route('users.updateRole', $user->id) }}" method="POST" class="d-flex">
+                @csrf
+                @method('PATCH')
+                <select name="role" class="form-select form-select-sm" onchange="this.form.submit()" style="min-width: 200px;">
+                  <option value="" {{ !$user->role ? 'selected' : '' }}>Select Role</option>
+                  <option value="housekeeper" {{ $user->role == 'housekeeper' ? 'selected' : '' }}>Housekeeper</option>
+                  <option value="supervisor" {{ $user->role == 'supervisor' ? 'selected' : '' }}>Supervisor</option>
+                  <option value="laundry" {{ $user->role == 'laundry' ? 'selected' : '' }}>Laundry</option>
+                </select>
+              </form>
+              <form action="{{ route('users.delete', $user->id) }}" method="POST" class="confirm-delete-form">
+                  @csrf
+                  @method('DELETE')
+                  <button type="submit" class="btn btn-danger btn-sm">
+                    <i class="fas fa-trash"></i>
+                  </button>
+                </form>
+                
+            </div>
+          </td>
+        </tr>
+      @endforeach
+    </tbody>
+  </table>
+</div>
+
+  </div>
+</div>
+
+<div class="bg-white p-4 rounded mt-5">
+          <!-- Search Form -->
+          <form action="{{ route('admin.dash') }}" method="GET" class="mb-4 mt-5">
+            <div class="input-group">
+              <input type="text" name="search" class="form-control" placeholder="Search by unit number..." value="{{ request('search') }}">
+              <button class="btn btn-primary" type="submit">
+                <i class="fas fa-search"></i> Search
+              </button>
+              @if(request('search'))
+              <a href="{{ route('admin.dash') }}" class="btn btn-secondary">
+                <i class="fas fa-undo"></i> Reset
+              </a>
+              @endif
+            </div>
+          </form>
+
+          <h5 class="mb-3">Cleaned Units</h5>
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
                 <tr>
-                    <th>#</th>
-                    <th>Housekeeper Name</th>
-                    <th>Role</th>
-                    <th>Service Type</th>
-                    <th>Status</th>
-                    <th>Task Date</th>
-                    <th>Action</th>
+                  <th>Unit Number</th>
+                  <th>User</th>
+                  <th>Status</th>
+                  <th>Submitted At</th>
+                  <th>Action</th>
                 </tr>
-            </thead>
-            <tbody>
-                @foreach($ques2 as $index => $entry)
-                    <tr>
-                        <td>{{ $index + 1 }}</td>
-                        <td>{{ $entry->housekeeper_name }}</td>
-                        <td>{{ $entry->role }}</td>
-                        <td>{{ $entry->service_type }}</td>
-                        <td>{{ $entry->status }}</td>
-                        <td>{{ $entry->task_date }}</td>
-                        <td>
-                            <form action="{{ route('questionnaire2.delete', $entry->id) }}" method="POST" class="confirm-delete-form">
-                                @csrf
-                                @method('DELETE')
-                                <button type="submit" class="btn btn-danger btn-sm"><i class="fas fa-trash me-1"></i> Delete</button>
-                              </form>
-                              
-                        </td>
-                    </tr>
+              </thead>
+              <tbody>
+                @foreach($ques1 as $ques)
+                <tr>
+                  <td>{{ $ques->unit_number }}</td>
+                  <td>{{ $ques->user->name }}</td>
+                  <td>
+                    <span class="badge bg-{{ $ques->status === 'Inspected' ? 'success' : 'primary' }}">
+                      {{ $ques->status ?? ' - - - - - - - ' }}
+                    </span>
+                  </td>
+                  <td>{{ $ques->created_at->format('Y-m-d H:i') }}</td>
+                  <td>
+                    <form action="{{ route('questionnaire1.delete', $ques->id) }}" method="POST" class="confirm-delete-form d-inline">
+                      @csrf
+                      @method('DELETE')
+                      <button type="submit" class="btn btn-danger btn-sm">
+                        <i class="fas fa-trash me-1"></i> Delete
+                      </button>
+                    </form>
+                  </td>
+                </tr>
                 @endforeach
-            </tbody>
-        </table>
+              </tbody>
+            </table>
+          </div>
+
+          <h5 class="mt-4 mb-3">Requested Linen</h5>
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+                <tr>
+                  <th>Unit Number</th>
+                  <th>User</th>
+                  <th>Status</th>
+                  <th>Submitted At</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                @foreach($ques2 as $ques)
+                <tr>
+                  <td>{{ $ques->unit_number }}</td>
+                  <td>{{ $ques->user->name }}</td>
+                  <td>
+                    <span class="badge bg-{{ $ques->status === 'Approved' ? 'success' : ($ques->status === 'Delivered' ? 'info' : 'warning') }}">
+                      {{ $ques->status ?? ' - - - - - - - ' }}
+                    </span>
+                  </td>
+                  <td>{{ $ques->created_at->format('Y-m-d H:i') }}</td>
+                  <td>
+                    <form action="{{ route('questionnaire2.delete', $ques->id) }}" method="POST" class="confirm-delete-form d-inline">
+                      @csrf
+                      @method('DELETE')
+                      <button type="submit" class="btn btn-danger btn-sm">
+                        <i class="fas fa-trash me-1"></i> Delete
+                      </button>
+                    </form>
+                  </td>
+                </tr>
+                @endforeach
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
+
+  
+
+  </div>
 
 </div>
 
