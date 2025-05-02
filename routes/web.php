@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Route;
 use Maatwebsite\Excel\Facades\Excel;
 
 Route::get('/', function () {
-    return redirect()->route('questionnaire1.create');
+    return redirect()->route('login');
 
 });
 
