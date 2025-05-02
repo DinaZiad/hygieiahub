@@ -45,6 +45,15 @@ class QuestionnaireOneController extends Controller
 
     public function store(Request $request)
     {
+        // Handle image uploads first
+        $images = [];
+        if ($request->hasFile('images')) {
+            foreach ($request->file('images') as $image) {
+                $path = $image->store('images', 'public');
+                $images[] = $path;
+            }
+        }
+
         $validated = $request->validate([
             'housekeeper_name' => 'required|string|max:255',
             'unit_number' => 'required|string|max:255',
@@ -54,6 +63,8 @@ class QuestionnaireOneController extends Controller
             'tasks' => 'nullable|array',
             'task_date' => 'required|date',
             'supervisor_id' => 'required|exists:users,id',
+            'images' => 'nullable|array',
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // 2MB max per image
         ]);
 
         // Add error handling for validation
@@ -66,6 +77,11 @@ class QuestionnaireOneController extends Controller
         $validated['bathroom_tasks'] = json_encode($request->tasks['bathroom'] ?? []);
         $validated['general_tasks'] = json_encode($request->tasks['general'] ?? []);
         $validated['bedroom_tasks'] = json_encode($request->tasks['bedroom'] ?? []);
+
+        // Add images to validated data if they exist
+        if (!empty($images)) {
+            $validated['images'] = json_encode($images); 
+        }
 
         $validated['user_id'] = Auth::id();
         $validated['status_remarks'] = "Null";

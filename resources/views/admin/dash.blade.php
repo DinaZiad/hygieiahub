@@ -302,150 +302,422 @@
     <div class="col-12">
       <div class="card">
         <div class="card-body">
-
-
-
-        <h2 class="mt-5">Users</h2>
-
-<div class="table-responsive">
-  <table class="table table-bordered align-middle">
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Role</th>
-        <th>Action</th>
-      </tr>
-    </thead>
-    <tbody>
-      @foreach($users as $index => $user)
-        <tr>
-          <td>{{ $index + 1 }}</td>
-          <td>{{ $user->name }}</td>
-          <td>{{ $user->email }}</td>
-          <td>{{ $user->role }}</td>
-          <td>
-            <div class="d-flex gap-2">
-              <form action="{{ route('users.updateRole', $user->id) }}" method="POST" class="d-flex">
-                @csrf
-                @method('PATCH')
-                <select name="role" class="form-select form-select-sm" onchange="this.form.submit()" style="min-width: 200px;">
-                  <option value="" {{ !$user->role ? 'selected' : '' }}>Select Role</option>
-                  <option value="housekeeper" {{ $user->role == 'housekeeper' ? 'selected' : '' }}>Housekeeper</option>
-                  <option value="supervisor" {{ $user->role == 'supervisor' ? 'selected' : '' }}>Supervisor</option>
-                  <option value="laundry" {{ $user->role == 'laundry' ? 'selected' : '' }}>Laundry</option>
-                </select>
-              </form>
-              <form action="{{ route('users.delete', $user->id) }}" method="POST" class="confirm-delete-form">
-                  @csrf
-                  @method('DELETE')
-                  <button type="submit" class="btn btn-danger btn-sm">
-                    <i class="fas fa-trash"></i>
-                  </button>
-                </form>
-                
+          <!-- Statistics Cards -->
+          
+          <!-- Users Table -->
+          <div class="mt-4">
+            <h2 class="mb-3">Users</h2>
+            <div class="table-responsive">
+              <table class="table table-bordered align-middle">
+                <thead>
+                  <tr>
+                    <th>#</th>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  @foreach($users as $index => $user)
+                    <tr>
+                      <td>{{ $index + 1 }}</td>
+                      <td>{{ $user->name }}</td>
+                      <td>{{ $user->email }}</td>
+                      <td>{{ $user->role }}</td>
+                      <td>
+                        <div class="d-flex gap-2">
+                          <form action="{{ route('users.updateRole', $user->id) }}" method="POST" class="d-flex">
+                            @csrf
+                            @method('PATCH')
+                            <select name="role" class="form-select form-select-sm" onchange="this.form.submit()" style="min-width: 200px;">
+                              <option value="" {{ !$user->role ? 'selected' : '' }}>Select Role</option>
+                              <option value="housekeeper" {{ $user->role == 'housekeeper' ? 'selected' : '' }}>Housekeeper</option>
+                              <option value="supervisor" {{ $user->role == 'supervisor' ? 'selected' : '' }}>Supervisor</option>
+                              <option value="laundry" {{ $user->role == 'laundry' ? 'selected' : '' }}>Laundry</option>
+                            </select>
+                          </form>
+                          <form action="{{ route('users.delete', $user->id) }}" method="POST" class="confirm-delete-form">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-danger btn-sm">
+                              <i class="fas fa-trash"></i>
+                            </button>
+                          </form>
+                        </div>
+                      </td>
+                    </tr>
+                  @endforeach
+                </tbody>
+              </table>
             </div>
-          </td>
-        </tr>
-      @endforeach
-    </tbody>
-  </table>
-</div>
-
-  </div>
-</div>
-
-<div class="bg-white p-4 rounded mt-5">
-          <!-- Search Form -->
-          <form action="{{ route('admin.dash') }}" method="GET" class="mb-4 mt-5">
-            <div class="input-group">
-              <input type="text" name="search" class="form-control" placeholder="Search by unit number..." value="{{ request('search') }}">
-              <button class="btn btn-primary" type="submit">
-                <i class="fas fa-search"></i> Search
-              </button>
-              @if(request('search'))
-              <a href="{{ route('admin.dash') }}" class="btn btn-secondary">
-                <i class="fas fa-undo"></i> Reset
-              </a>
-              @endif
-            </div>
-          </form>
-
-          <h5 class="mb-3">Cleaned Units</h5>
-          <div class="table-responsive">
-            <table class="table table-hover">
-              <thead>
-                <tr>
-                  <th>Unit Number</th>
-                  <th>User</th>
-                  <th>Status</th>
-                  <th>Submitted At</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                @foreach($ques1 as $ques)
-                <tr>
-                  <td>{{ $ques->unit_number }}</td>
-                  <td>{{ $ques->user->name }}</td>
-                  <td>
-                    <span class="badge bg-{{ $ques->status === 'Inspected' ? 'success' : 'primary' }}">
-                      {{ $ques->status ?? ' - - - - - - - ' }}
-                    </span>
-                  </td>
-                  <td>{{ $ques->created_at->format('Y-m-d H:i') }}</td>
-                  <td>
-                    <form action="{{ route('questionnaire1.delete', $ques->id) }}" method="POST" class="confirm-delete-form d-inline">
-                      @csrf
-                      @method('DELETE')
-                      <button type="submit" class="btn btn-danger btn-sm">
-                        <i class="fas fa-trash me-1"></i> Delete
-                      </button>
-                    </form>
-                  </td>
-                </tr>
-                @endforeach
-              </tbody>
-            </table>
           </div>
 
-          <h5 class="mt-4 mb-3">Requested Linen</h5>
-          <div class="table-responsive">
-            <table class="table table-hover">
-              <thead>
-                <tr>
-                  <th>Unit Number</th>
-                  <th>User</th>
-                  <th>Status</th>
-                  <th>Submitted At</th>
-                  <th>Action</th>
-                </tr>
-              </thead>
-              <tbody>
-                @foreach($ques2 as $ques)
-                <tr>
-                  <td>{{ $ques->unit_number }}</td>
-                  <td>{{ $ques->user->name }}</td>
-                  <td>
-                    <span class="badge bg-{{ $ques->status === 'Approved' ? 'success' : ($ques->status === 'Delivered' ? 'info' : 'warning') }}">
-                      {{ $ques->status ?? ' - - - - - - - ' }}
-                    </span>
-                  </td>
-                  <td>{{ $ques->created_at->format('Y-m-d H:i') }}</td>
-                  <td>
-                    <form action="{{ route('questionnaire2.delete', $ques->id) }}" method="POST" class="confirm-delete-form d-inline">
-                      @csrf
-                      @method('DELETE')
-                      <button type="submit" class="btn btn-danger btn-sm">
-                        <i class="fas fa-trash me-1"></i> Delete
-                      </button>
-                    </form>
-                  </td>
-                </tr>
-                @endforeach
-              </tbody>
-            </table>
+          <!-- Search Form and Tables -->
+          <div class="mt-5">
+            <form action="{{ route('admin.dash') }}" method="GET" class="mb-4">
+              <div class="input-group">
+                <input type="text" name="search" class="form-control" placeholder="Search by unit number..." value="{{ request('search') }}">
+                <button class="btn btn-primary" type="submit">
+                  <i class="fas fa-search"></i> Search
+                </button>
+                @if(request('search'))
+                  <a href="{{ route('admin.dash') }}" class="btn btn-secondary">
+                    <i class="fas fa-undo"></i> Reset
+                  </a>
+                @endif
+              </div>
+            </form>
+
+            <!-- Requested Linen Table -->
+            <div class="mb-4">
+              <h2 class="mb-3">Requested Linen</h2>
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>Unit Number</th>
+                      <th>User</th>
+                      <th>Status</th>
+                      <th>Submitted At</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @foreach($ques2 as $ques)
+                      <tr>
+                        <td>{{ $ques->unit_number }}</td>
+                        <td>{{ $ques->user->name }}</td>
+                        <td>
+                          <span class="badge bg-{{ $ques->status === 'Approved' ? 'success' : ($ques->status === 'Delivered' ? 'info' : 'warning') }}">
+                            {{ $ques->status ?? ' - - - - - - - ' }}
+                          </span>
+                        </td>
+                        <td>{{ $ques->created_at->format('Y-m-d H:i') }}</td>
+                        <td>
+                          <div class="d-flex gap-2">
+                            <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#detailsModalQ2{{ $ques->id }}">
+                              <i class="fas fa-eye me-1"></i> View Details
+                            </button>
+                            <form action="{{ route('questionnaire2.delete', $ques->id) }}" method="POST" class="confirm-delete-form d-inline">
+                              @csrf
+                              @method('DELETE')
+                              <button type="submit" class="btn btn-danger btn-sm">
+                                <i class="fas fa-trash"></i>
+                              </button>
+                            </form>
+                          </div>
+                        </td>
+                      </tr>
+                      <!-- Questionnaire 2 Details Modal -->
+                      <div class="modal fade" id="detailsModalQ2{{ $ques->id }}" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                          <div class="modal-content">
+                            <div class="modal-header bg-primary text-white">
+                              <h5 class="modal-title">Unit #{{ $ques->unit_number }} Details (Questionnaire 2)</h5>
+                              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                              <div class="row">
+                                <!-- Left column: Linens -->
+                                <div class="col-md-6 mb-4">
+                                  <h6 class="text-primary mb-3"><i class="fas fa-bed me-2"></i>Linens</h6>
+                                  <div class="accordion" id="linensAccordionQ2{{ $ques->id }}">
+                                    <!-- Bed Linen -->
+                                    <div class="accordion-item">
+                                      <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#bedLinenQ2{{ $ques->id }}">
+                                          <i class="fas fa-bed me-2"></i>Bed Linen
+                                        </button>
+                                      </h2>
+                                      <div id="bedLinenQ2{{ $ques->id }}" class="accordion-collapse collapse">
+                                        <div class="accordion-body">
+                                          @if(!empty($ques->bed_linen) && is_array(json_decode($ques->bed_linen, true)))
+                                            <ul class="list-group">
+                                              @foreach(json_decode($ques->bed_linen, true) ?? [] as $item => $quantity)
+                                                @if($quantity > 0)
+                                                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                    {{ $item }}
+                                                    <span class="badge bg-primary rounded-pill">{{ $quantity }}</span>
+                                                  </li>
+                                                @endif
+                                              @endforeach
+                                            </ul>
+                                          @else
+                                            <p class="text-muted text-center py-3">No bed linen items</p>
+                                          @endif
+                                        </div>
+                                      </div>
+                                    </div>
+                                    
+                                    <!-- Bath Linen -->
+                                    <div class="accordion-item">
+                                      <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#bathLinenQ2{{ $ques->id }}">
+                                          <i class="fas fa-bath me-2"></i>Bath Linen
+                                        </button>
+                                      </h2>
+                                      <div id="bathLinenQ2{{ $ques->id }}" class="accordion-collapse collapse">
+                                        <div class="accordion-body">
+                                          @if(!empty($ques->bath_linen) && is_array(json_decode($ques->bath_linen, true)))
+                                            <ul class="list-group">
+                                              @foreach(json_decode($ques->bath_linen, true) ?? [] as $item => $quantity)
+                                                @if($quantity > 0)
+                                                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                    {{ $item }}
+                                                    <span class="badge bg-primary rounded-pill">{{ $quantity }}</span>
+                                                  </li>
+                                                @endif
+                                              @endforeach
+                                            </ul>
+                                          @else
+                                            <p class="text-muted text-center py-3">No bath linen items</p>
+                                          @endif
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                                
+                                <!-- Right column: Info -->
+                                <div class="col-md-6">
+                                  <div class="accordion" id="infoAccordionQ2{{ $ques->id }}">
+                                    <!-- Service Type -->
+                                    <div class="accordion-item">
+                                      <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#serviceTypeQ2{{ $ques->id }}">
+                                          <i class="fas fa-info-circle me-2"></i>Service Type
+                                        </button>
+                                      </h2>
+                                      <div id="serviceTypeQ2{{ $ques->id }}" class="accordion-collapse collapse">
+                                        <div class="accordion-body">
+                                          <p class="mb-0">{{ $ques->service_type ?? 'Not specified' }}</p>
+                                        </div>
+                                      </div>
+                                    </div>
+                                    
+                                    <!-- Note -->
+                                    <div class="accordion-item">
+                                      <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#noteQ2{{ $ques->id }}">
+                                          <i class="fas fa-sticky-note me-2"></i>Note
+                                        </button>
+                                      </h2>
+                                      <div id="noteQ2{{ $ques->id }}" class="accordion-collapse collapse">
+                                        <div class="accordion-body">
+                                          <p class="mb-0">{{ $ques->note ?? 'No note provided' }}</p>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    @endforeach
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Cleaned Units Table -->
+            <div>
+              <h2 class="mb-3">Cleaned Units</h2>
+              <div class="table-responsive">
+                <table class="table table-hover">
+                  <thead>
+                    <tr>
+                      <th>Unit Number</th>
+                      <th>User</th>
+                      <th>Status</th>
+                      <th>Submitted At</th>
+                      <th>Action</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    @foreach($ques1 as $ques)
+                      <tr>
+                        <td>{{ $ques->unit_number }}</td>
+                        <td>{{ $ques->user->name }}</td>
+                        <td>
+                          <span class="badge bg-{{ $ques->status === 'Inspected' ? 'success' : 'primary' }}">
+                            {{ $ques->status ?? ' - - - - - - - ' }}
+                          </span>
+                        </td>
+                        <td>{{ $ques->created_at->format('Y-m-d H:i') }}</td>
+                        <td>
+                          <div class="d-flex gap-2">
+                            <button class="btn btn-sm btn-primary" data-bs-toggle="modal" data-bs-target="#detailsModalQ1{{ $ques->id }}">
+                              <i class="fas fa-eye me-1"></i> View Details
+                            </button>
+                            <form action="{{ route('questionnaire1.delete', $ques->id) }}" method="POST" class="confirm-delete-form d-inline">
+                              @csrf
+                              @method('DELETE')
+                              <button type="submit" class="btn btn-danger btn-sm">
+                                <i class="fas fa-trash me-1"></i> Delete
+                              </button>
+                            </form>
+                          </div>
+                        </td>
+                      </tr>
+                      <!-- Questionnaire 1 Details Modal -->
+                      <div class="modal fade" id="detailsModalQ1{{ $ques->id }}" tabindex="-1" aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                          <div class="modal-content">
+                            <div class="modal-header bg-primary text-white">
+                              <h5 class="modal-title">Unit #{{ $ques->unit_number }} Details (Questionnaire 1)</h5>
+                              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                              <div class="row">
+                                <!-- Left column: Images -->
+                                <div class="col-md-6 mb-4">
+                                  <h6 class="text-primary mb-3"><i class="fas fa-images me-2"></i>Images</h6>
+                                  <div class="row g-2">
+                                    @if(!empty($ques->image))
+                                      @foreach(json_decode($ques->image, true) as $image)
+                                        <div class="col-6 col-md-4">
+                                          <img src="{{ asset('storage/' . $image) }}" class="img-fluid rounded" alt="Uploaded image">
+                                        </div>
+                                      @endforeach
+                                    @else
+                                      <div class="col-12 text-center py-4">
+                                        <i class="fas fa-image fa-3x text-muted mb-3"></i>
+                                        <p class="text-muted">No images uploaded</p>
+                                      </div>
+                                    @endif
+                                  </div>
+                                </div>
+                                
+                                <!-- Right column: Details -->
+                                <div class="col-md-6">
+                                  <div class="accordion" id="detailsAccordionQ1{{ $ques->id }}">
+                                    <!-- Provided Items -->
+                                    <div class="accordion-item">
+                                      <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#providedItemsQ1{{ $ques->id }}">
+                                          <i class="fas fa-plus-circle me-2"></i>Provided Items
+                                        </button>
+                                      </h2>
+                                      <div id="providedItemsQ1{{ $ques->id }}" class="accordion-collapse collapse">
+                                        <div class="accordion-body">
+                                          @if(!empty($ques->provided_items) && is_array(json_decode($ques->provided_items, true)))
+                                            <ul class="list-group">
+                                              @foreach(json_decode($ques->provided_items, true) ?? [] as $item => $quantity)
+                                                @if($quantity > 0)
+                                                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                    {{ $item }}
+                                                    <span class="badge bg-primary rounded-pill">{{ $quantity }}</span>
+                                                  </li>
+                                                @endif
+                                              @endforeach
+                                            </ul>
+                                          @else
+                                            <p class="text-muted text-center py-3">No provided items</p>
+                                          @endif
+                                        </div>
+                                      </div>
+                                    </div>
+                                    
+                                    <!-- Removed Items -->
+                                    <div class="accordion-item">
+                                      <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#removedItemsQ1{{ $ques->id }}">
+                                          <i class="fas fa-minus-circle me-2"></i>Removed Items
+                                        </button>
+                                      </h2>
+                                      <div id="removedItemsQ1{{ $ques->id }}" class="accordion-collapse collapse">
+                                        <div class="accordion-body">
+                                          @if(!empty($ques->removed_items) && is_array(json_decode($ques->removed_items, true)))
+                                            <ul class="list-group">
+                                              @foreach(json_decode($ques->removed_items, true) ?? [] as $item => $quantity)
+                                                @if($quantity > 0)
+                                                  <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                    {{ $item }}
+                                                    <span class="badge bg-danger rounded-pill">{{ $quantity }}</span>
+                                                  </li>
+                                                @endif
+                                              @endforeach
+                                            </ul>
+                                          @else
+                                            <p class="text-muted text-center py-3">No removed items</p>
+                                          @endif
+                                        </div>
+                                      </div>
+                                    </div>
+                                    
+                                    <!-- Tasks -->
+                                    <div class="accordion-item">
+                                      <h2 class="accordion-header">
+                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#tasksQ1{{ $ques->id }}">
+                                          <i class="fas fa-tasks me-2"></i>Tasks
+                                        </button>
+                                      </h2>
+                                      <div id="tasksQ1{{ $ques->id }}" class="accordion-collapse collapse">
+                                        <div class="accordion-body">
+                                          <div class="row">
+                                            <!-- Bedroom Tasks -->
+                                            <div class="col-12 mb-3">
+                                              <h6 class="text-primary mb-2"><i class="fas fa-bed me-2"></i>Bedroom Tasks</h6>
+                                              <ul class="list-group">
+                                                @foreach(json_decode($ques->bedroom_tasks, true) ?? [] as $task)
+                                                  <li class="list-group-item">
+                                                    <div class="form-check">
+                                                      <input class="form-check-input" type="checkbox" checked disabled>
+                                                      <label class="form-check-label">{{ $task }}</label>
+                                                    </div>
+                                                  </li>
+                                                @endforeach
+                                              </ul>
+                                            </div>
+                                            
+                                            <!-- Bathroom Tasks -->
+                                            <div class="col-12 mb-3">
+                                              <h6 class="text-primary mb-2"><i class="fas fa-bath me-2"></i>Bathroom Tasks</h6>
+                                              <ul class="list-group">
+                                                @foreach(json_decode($ques->bathroom_tasks, true) ?? [] as $task)
+                                                  <li class="list-group-item">
+                                                    <div class="form-check">
+                                                      <input class="form-check-input" type="checkbox" checked disabled>
+                                                      <label class="form-check-label">{{ $task }}</label>
+                                                    </div>
+                                                  </li>
+                                                @endforeach
+                                              </ul>
+                                            </div>
+                                            
+                                            <!-- General Tasks -->
+                                            <div class="col-12">
+                                              <h6 class="text-primary mb-2"><i class="fas fa-tasks me-2"></i>General Tasks</h6>
+                                              <ul class="list-group">
+                                                @foreach(json_decode($ques->general_tasks, true) ?? [] as $task)
+                                                  <li class="list-group-item">
+                                                    <div class="form-check">
+                                                      <input class="form-check-input" type="checkbox" checked disabled>
+                                                      <label class="form-check-label">{{ $task }}</label>
+                                                    </div>
+                                                  </li>
+                                                @endforeach
+                                              </ul>
+                                            </div>
+                                          </div>
+                                        </div>
+                                      </div>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    @endforeach
+                  </tbody>
+                </table>
+              </div>
+            </div>
           </div>
         </div>
       </div>

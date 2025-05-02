@@ -24,6 +24,7 @@ class QuestionnaireOne extends Model
         'status',
         'user_id',
         'supervisor_id',
+        'images',
 
     ];
 

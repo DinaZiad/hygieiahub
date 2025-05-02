@@ -282,7 +282,7 @@
                 </div>
             @endif
 
-            <form method="POST" action="{{ route('questionnaire1.store') }}">
+            <form method="POST" action="{{ route('questionnaire1.store') }}" enctype="multipart/form-data">
                 @csrf
 
                 <div class="accordion mb-4" id="formAccordion">
@@ -388,6 +388,24 @@
                                         </div>
                                     </div>
                                 @endforeach
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Image Upload Section -->
+                    <div class="accordion-item">
+                        <h2 class="accordion-header" id="headingImages">
+                            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseImages" aria-expanded="false" aria-controls="collapseImages">
+                                <i class="fas fa-images me-2"></i> Upload Images
+                            </button>
+                        </h2>
+                        <div id="collapseImages" class="accordion-collapse collapse" aria-labelledby="headingImages">
+                            <div class="accordion-body">
+                                <div class="mb-3">
+                                    <label for="images" class="form-label">Upload Images</label>
+                                    <input type="file" class="form-control" id="images" name="images[]" multiple accept="image/*">
+                                    <div class="form-text">You can upload multiple images. Supported formats: JPG, PNG, GIF</div>
+                                </div>
                             </div>
                         </div>
                     </div>

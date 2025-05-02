@@ -20,11 +20,11 @@ class AdminController extends Controller
          // Search for both questionnaires by unit number
          $ques1 = $search ? 
             QuestionnaireOne::where('unit_number', 'like', '%' . $search . '%')->get() : 
-            QuestionnaireOne::all();
+            QuestionnaireOne::all()->reverse();
             
          $ques2 = $search ? 
             Questionnaire2::where('unit_number', 'like', '%' . $search . '%')->get() : 
-            Questionnaire2::all();
+            Questionnaire2::all()->reverse();
 
          $inspectedQues = QuestionnaireOne::where('status', 'Inspected')->count();
          $approvedQues = Questionnaire2::where('status', 'Approved')->count();

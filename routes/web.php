@@ -99,3 +99,4 @@ Route::get('/clear-config', function () {
 Route::get('/export', [AdminController::class, 'export'])->name('export.report');
 
 require __DIR__.'/auth.php';
+    

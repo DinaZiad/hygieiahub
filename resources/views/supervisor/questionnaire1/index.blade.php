@@ -468,11 +468,6 @@
                                         <div class="mobile-info-row">
                                             <span class="mobile-label">Submitted By:</span>
                                             <div class="d-flex align-items-center">
-                                                <div class="avatar avatar-sm me-2">
-                                                    <span class="avatar-title rounded-circle bg-light text-dark p-2">
-                                                        {{ substr($entry->user->name ?? 'U', 0, 1) }}
-                                                    </span>
-                                                </div>
                                                 <span>{{ $entry->user->name ?? 'Unknown' }}</span>
                                             </div>
                                         </div>
@@ -481,22 +476,15 @@
                                             <span class="badge bg-primary bg-opacity-10 text-primary">Unit: {{ $entry->unit_number }}</span>
                                         </div>
                                         <div class="mobile-info-row">
-                                            <span class="mobile-label">Service Type:</span>
-                                            <span class="badge bg-info bg-opacity-10 text-info">{{ $entry->service_type }}</span>
-                                        </div>
-                                        <div class="mobile-info-row">
                                             <span class="mobile-label">Task Date:</span>
                                             <span class="badge bg-light text-dark">{{ $entry->task_date }}</span>
                                         </div>
-                                        <div class="mobile-info-row">
-                                            <span class="mobile-label">Items:</span>
-                                            @if(!empty($entry->provided_items) && is_array(json_decode($entry->provided_items, true)))
-                                                <button class="btn btn-sm btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#mobileItemsModal{{ $entry->id }}">
-                                                    View Items
-                                                </button>
-                                            @else
-                                                <span class="badge bg-secondary bg-opacity-10 text-secondary">No items</span>
-                                            @endif
+                                        <div class="mobile-info-row d-flex ">
+                                            <div class="d-flex justify-content-start align-items-center">
+                                            <button class="btn btn-sm btn-primary " style="width: 50%;" data-bs-toggle="modal" data-bs-target="#detailsModal{{ $entry->id }}">
+                                                <i class="fas fa-eye me-1"></i> View Details
+                                            </button>
+                                            </div>
                                         </div>
                                     </div>
                                     <div class="entry-actions">
@@ -517,37 +505,173 @@
                                             @endif
                                         </form>
                                     </div>
-                                    <!-- Mobile Items Modal -->
-                                    @if(!empty($entry->provided_items) && is_array(json_decode($entry->provided_items, true)))
-                                        <div class="modal fade" id="mobileItemsModal{{ $entry->id }}" tabindex="-1" aria-hidden="true">
-                                            <div class="modal-dialog modal-dialog-centered">
-                                                <div class="modal-content">
-                                                    <div class="modal-header">
-                                                        <h5 class="modal-title">Items for Unit #{{ $entry->unit_number }}</h5>
-                                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                    </div>
-                                                    <div class="modal-body">
-                                                        <h6>Provided Items:</h6>
-                                                        <ul>
-                                                            @foreach(json_decode($entry->provided_items, true) ?? [] as $item => $quantity)
-                                                                @if($quantity > 0)
-                                                                    <li>{{ $item }}: {{ $quantity }}</li>
+                                    <!-- Mobile Details Modal -->
+                                    <div class="modal fade" id="detailsModal{{ $entry->id }}" tabindex="-1" aria-hidden="true">
+                                        <div class="modal-dialog modal-dialog-centered modal-lg">
+                                            <div class="modal-content">
+                                                <div class="modal-header bg-primary text-white">
+                                                    <h5 class="modal-title">Unit #{{ $entry->unit_number }} Details</h5>
+                                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="row">
+                                                        <!-- Images Column -->
+                                                        <div class="col-md-6 mb-4">
+                                                            <h6 class="text-primary mb-3"><i class="fas fa-images me-2"></i>Images</h6>
+                                                            <div class="row g-2">
+                                                                @if(!empty($entry->images) && is_array(json_decode($entry->images, true)))
+                                                                    @foreach(json_decode($entry->images, true) as $image)
+                                                                        <div class="col-6 col-md-4">
+                                                                            <a href="{{ asset('storage/' . $image) }}" data-bs-toggle="modal" data-bs-target="#imageModal{{ $entry->id . '_' . $loop->index }}">
+                                                                                <img src="{{ asset('storage/' . $image) }}" class="img-fluid rounded" alt="Uploaded image">
+                                                                            </a>
+                                                                            <!-- Image Modal -->
+                                                                            <div class="modal fade" id="imageModal{{ $entry->id . '_' . $loop->index }}" tabindex="-1" aria-hidden="true">
+                                                                                <div class="modal-dialog modal-dialog-centered">
+                                                                                    <div class="modal-content">
+                                                                                        <div class="modal-header">
+                                                                                            <h5 class="modal-title">Unit #{{ $entry->unit_number }} Image</h5>
+                                                                                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                                                        </div>
+                                                                                        <div class="modal-body text-center">
+                                                                                            <img src="{{ asset('storage/' . $image) }}" class="img-fluid rounded">
+                                                                                        </div>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    @endforeach
+                                                                @else
+                                                                    <div class="col-12 text-center py-4">
+                                                                        <i class="fas fa-image fa-3x text-muted mb-3"></i>
+                                                                        <p class="text-muted">No images uploaded</p>
+                                                                    </div>
                                                                 @endif
-                                                            @endforeach
-                                                        </ul>
-                                                        <h6>Removed Items:</h6>
-                                                        <ul>
-                                                            @foreach(json_decode($entry->removed_items, true) ?? [] as $item => $quantity)
-                                                                @if($quantity > 0)
-                                                                    <li>{{ $item }}: {{ $quantity }}</li>
-                                                                @endif
-                                                            @endforeach
-                                                        </ul>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        <!-- Items Column -->
+                                                        <div class="col-md-6">
+                                                            <div class="accordion" id="detailsAccordion{{ $entry->id }}">
+                                                                <!-- Provided Items -->
+                                                                <div class="accordion-item">
+                                                                    <h2 class="accordion-header">
+                                                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#providedItems{{ $entry->id }}">
+                                                                            <i class="fas fa-plus-circle me-2"></i>Provided Items
+                                                                        </button>
+                                                                    </h2>
+                                                                    <div id="providedItems{{ $entry->id }}" class="accordion-collapse collapse">
+                                                                        <div class="accordion-body">
+                                                                            @if(!empty($entry->provided_items) && is_array(json_decode($entry->provided_items, true)))
+                                                                                <ul class="list-group">
+                                                                                    @foreach(json_decode($entry->provided_items, true) ?? [] as $item => $quantity)
+                                                                                        @if($quantity > 0)
+                                                                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                                                {{ $item }}
+                                                                                                <span class="badge bg-primary rounded-pill">{{ $quantity }}</span>
+                                                                                            </li>
+                                                                                        @endif
+                                                                                    @endforeach
+                                                                                </ul>
+                                                                            @else
+                                                                                <p class="text-muted text-center py-3">No provided items</p>
+                                                                            @endif
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                
+                                                                <!-- Removed Items -->
+                                                                <div class="accordion-item">
+                                                                    <h2 class="accordion-header">
+                                                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#removedItems{{ $entry->id }}">
+                                                                            <i class="fas fa-minus-circle me-2"></i>Removed Items
+                                                                        </button>
+                                                                    </h2>
+                                                                    <div id="removedItems{{ $entry->id }}" class="accordion-collapse collapse">
+                                                                        <div class="accordion-body">
+                                                                            @if(!empty($entry->removed_items) && is_array(json_decode($entry->removed_items, true)))
+                                                                                <ul class="list-group">
+                                                                                    @foreach(json_decode($entry->removed_items, true) ?? [] as $item => $quantity)
+                                                                                        @if($quantity > 0)
+                                                                                            <li class="list-group-item d-flex justify-content-between align-items-center">
+                                                                                                {{ $item }}
+                                                                                                <span class="badge bg-danger rounded-pill">{{ $quantity }}</span>
+                                                                                            </li>
+                                                                                        @endif
+                                                                                    @endforeach
+                                                                                </ul>
+                                                                            @else
+                                                                                <p class="text-muted text-center py-3">No removed items</p>
+                                                                            @endif
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                
+                                                                <!-- Tasks -->
+                                                                <div class="accordion-item">
+                                                                    <h2 class="accordion-header">
+                                                                        <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#tasks{{ $entry->id }}">
+                                                                            <i class="fas fa-tasks me-2"></i>Tasks
+                                                                        </button>
+                                                                    </h2>
+                                                                    <div id="tasks{{ $entry->id }}" class="accordion-collapse collapse">
+                                                                        <div class="accordion-body">
+                                                                            <div class="row">
+                                                                                <!-- Bedroom Tasks -->
+                                                                                <div class="col-12 mb-3">
+                                                                                    <h6 class="text-primary mb-2"><i class="fas fa-bed me-2"></i>Bedroom Tasks</h6>
+                                                                                    <ul class="list-group">
+                                                                                        @foreach(json_decode($entry->bedroom_tasks, true) ?? [] as $task)
+                                                                                            <li class="list-group-item">
+                                                                                                <div class="form-check">
+                                                                                                    <input class="form-check-input" type="checkbox" checked disabled>
+                                                                                                    <label class="form-check-label">{{ $task }}</label>
+                                                                                                </div>
+                                                                                            </li>
+                                                                                        @endforeach
+                                                                                    </ul>
+                                                                                </div>
+                                                                                
+                                                                                <!-- Bathroom Tasks -->
+                                                                                <div class="col-12 mb-3">
+                                                                                    <h6 class="text-primary mb-2"><i class="fas fa-bath me-2"></i>Bathroom Tasks</h6>
+                                                                                    <ul class="list-group">
+                                                                                        @foreach(json_decode($entry->bathroom_tasks, true) ?? [] as $task)
+                                                                                            <li class="list-group-item">
+                                                                                                <div class="form-check">
+                                                                                                    <input class="form-check-input" type="checkbox" checked disabled>
+                                                                                                    <label class="form-check-label">{{ $task }}</label>
+                                                                                                </div>
+                                                                                            </li>
+                                                                                        @endforeach
+                                                                                    </ul>
+                                                                                </div>
+                                                                                
+                                                                                <!-- General Tasks -->
+                                                                                <div class="col-12">
+                                                                                    <h6 class="text-primary mb-2"><i class="fas fa-tasks me-2"></i>General Tasks</h6>
+                                                                                    <ul class="list-group">
+                                                                                        @foreach(json_decode($entry->general_tasks, true) ?? [] as $task)
+                                                                                            <li class="list-group-item">
+                                                                                                <div class="form-check">
+                                                                                                    <input class="form-check-input" type="checkbox" checked disabled>
+                                                                                                    <label class="form-check-label">{{ $task }}</label>
+                                                                                                </div>
+                                                                                            </li>
+                                                                                        @endforeach
+                                                                                    </ul>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    @endif
+                                    </div>
                                 </div>
                             </div>
                         @empty
