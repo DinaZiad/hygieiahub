@@ -3,9 +3,20 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
+use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
+    /**
+     * Check if an index exists on a table
+     */
+    private function indexExists($table, $indexName)
+    {
+        $conn = Schema::getConnection()->getDoctrineSchemaManager();
+        $indexes = $conn->listTableIndexes($table);
+        return array_key_exists($indexName, $indexes);
+    }
+
     /**
      * Run the migrations to add indexes for better performance.
      */
@@ -13,28 +24,48 @@ return new class extends Migration
     {
         // Add indexes to questionnaire_ones table
         Schema::table('questionnaire_ones', function (Blueprint $table) {
-            $table->index('user_id');
-            $table->index('supervisor_id');
-            $table->index('task_date');
-            $table->index('status');
+            if (!$this->indexExists('questionnaire_ones', 'questionnaire_ones_user_id_index')) {
+                $table->index('user_id');
+            }
+            if (!$this->indexExists('questionnaire_ones', 'questionnaire_ones_supervisor_id_index')) {
+                $table->index('supervisor_id');
+            }
+            if (!$this->indexExists('questionnaire_ones', 'questionnaire_ones_task_date_index')) {
+                $table->index('task_date');
+            }
+            if (!$this->indexExists('questionnaire_ones', 'questionnaire_ones_status_index')) {
+                $table->index('status');
+            }
         });
 
         // Add indexes to questionnaire2s table
         Schema::table('questionnaire2s', function (Blueprint $table) {
-            $table->index('user_id');
-            $table->index('task_date');
-            $table->index('status');
+            if (!$this->indexExists('questionnaire2s', 'questionnaire2s_user_id_index')) {
+                $table->index('user_id');
+            }
+            if (!$this->indexExists('questionnaire2s', 'questionnaire2s_task_date_index')) {
+                $table->index('task_date');
+            }
+            if (!$this->indexExists('questionnaire2s', 'questionnaire2s_status_index')) {
+                $table->index('status');
+            }
         });
 
         // Add indexes to users table
         Schema::table('users', function (Blueprint $table) {
-            $table->index('role');
+            if (!$this->indexExists('users', 'users_role_index')) {
+                $table->index('role');
+            }
         });
 
         // Add indexes to sessions table for better performance
         Schema::table('sessions', function (Blueprint $table) {
-            $table->index('user_id');
-            $table->index('last_activity');
+            if (!$this->indexExists('sessions', 'sessions_user_id_index')) {
+                $table->index('user_id');
+            }
+            if (!$this->indexExists('sessions', 'sessions_last_activity_index')) {
+                $table->index('last_activity');
+            }
         });
     }
 
@@ -43,30 +74,52 @@ return new class extends Migration
      */
     public function down(): void
     {
+        // We'll only drop indexes if they exist to avoid errors
+
         // Remove indexes from questionnaire_ones table
         Schema::table('questionnaire_ones', function (Blueprint $table) {
-            $table->dropIndex(['user_id']);
-            $table->dropIndex(['supervisor_id']);
-            $table->dropIndex(['task_date']);
-            $table->dropIndex(['status']);
+            if ($this->indexExists('questionnaire_ones', 'questionnaire_ones_user_id_index')) {
+                $table->dropIndex(['user_id']);
+            }
+            if ($this->indexExists('questionnaire_ones', 'questionnaire_ones_supervisor_id_index')) {
+                $table->dropIndex(['supervisor_id']);
+            }
+            if ($this->indexExists('questionnaire_ones', 'questionnaire_ones_task_date_index')) {
+                $table->dropIndex(['task_date']);
+            }
+            if ($this->indexExists('questionnaire_ones', 'questionnaire_ones_status_index')) {
+                $table->dropIndex(['status']);
+            }
         });
 
         // Remove indexes from questionnaire2s table
         Schema::table('questionnaire2s', function (Blueprint $table) {
-            $table->dropIndex(['user_id']);
-            $table->dropIndex(['task_date']);
-            $table->dropIndex(['status']);
+            if ($this->indexExists('questionnaire2s', 'questionnaire2s_user_id_index')) {
+                $table->dropIndex(['user_id']);
+            }
+            if ($this->indexExists('questionnaire2s', 'questionnaire2s_task_date_index')) {
+                $table->dropIndex(['task_date']);
+            }
+            if ($this->indexExists('questionnaire2s', 'questionnaire2s_status_index')) {
+                $table->dropIndex(['status']);
+            }
         });
 
         // Remove indexes from users table
         Schema::table('users', function (Blueprint $table) {
-            $table->dropIndex(['role']);
+            if ($this->indexExists('users', 'users_role_index')) {
+                $table->dropIndex(['role']);
+            }
         });
 
         // Remove indexes from sessions table
         Schema::table('sessions', function (Blueprint $table) {
-            $table->dropIndex(['user_id']);
-            $table->dropIndex(['last_activity']);
+            if ($this->indexExists('sessions', 'sessions_user_id_index')) {
+                $table->dropIndex(['user_id']);
+            }
+            if ($this->indexExists('sessions', 'sessions_last_activity_index')) {
+                $table->dropIndex(['last_activity']);
+            }
         });
     }
 };

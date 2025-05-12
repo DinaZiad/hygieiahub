@@ -21,21 +21,27 @@ Upload the `php.ini` file to your Amezmo server and configure it to be used:
 3. Upload the `php.ini` file or copy its contents to the PHP configuration section
 4. Save the changes
 
-## 3. Run Database Optimizations
+## 3. Install Required Packages
 
-Run the migration to add indexes to your database tables:
+Install the Intervention/Image package for image optimization:
+
+```bash
+chmod +x install_image_package.sh
+./install_image_package.sh
+```
+
+## 4. Run Database Optimizations
+
+Run the migration to add indexes to your database tables. The migration has been updated to check if indexes already exist before trying to create them:
 
 ```bash
 php artisan migrate
 ```
 
-## 4. Install Dependencies
-
-Run the installation script to install required packages and optimize the application:
+If you encounter any issues with the migration, you can run it with the `--force` flag:
 
 ```bash
-chmod +x install_dependencies.sh
-./install_dependencies.sh
+php artisan migrate --force
 ```
 
 ## 5. Configure Nginx (via Amezmo Dashboard)
@@ -78,7 +84,10 @@ If you still experience timeout issues:
 
 1. Check the Laravel logs: `storage/logs/laravel.log`
 2. Check Nginx error logs
-3. Consider further optimizations:
+3. If you encounter migration errors:
+   - You can try running `php artisan migrate:fresh` (WARNING: This will delete all data)
+   - Or manually add indexes using MySQL commands
+4. Consider further optimizations:
    - Implement queue processing for heavy tasks
    - Optimize database queries further
    - Consider using Redis for caching instead of file/database
