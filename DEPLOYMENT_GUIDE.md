@@ -32,17 +32,38 @@ chmod +x install_image_package.sh
 
 ## 4. Run Database Optimizations
 
-Run the migration to add indexes to your database tables. The migration has been updated to check if indexes already exist before trying to create them:
+Run the migration to add indexes to your database tables:
 
 ```bash
 php artisan migrate
 ```
 
-If you encounter any issues with the migration, you can run it with the `--force` flag:
+If you encounter any issues with the first migration, you can try the alternative migration:
 
 ```bash
-php artisan migrate --force
+# Run only the alternative migration
+php artisan migrate --path=database/migrations/2025_05_13_000001_add_indexes_alternative.php
 ```
+
+If you still encounter issues, you can manually add the indexes using MySQL commands. Connect to your database and run:
+
+```sql
+-- For questionnaire_ones table
+ALTER TABLE questionnaire_ones ADD INDEX questionnaire_ones_user_id_index (user_id);
+ALTER TABLE questionnaire_ones ADD INDEX questionnaire_ones_supervisor_id_index (supervisor_id);
+ALTER TABLE questionnaire_ones ADD INDEX questionnaire_ones_task_date_index (task_date);
+ALTER TABLE questionnaire_ones ADD INDEX questionnaire_ones_status_index (status);
+
+-- For questionnaire2s table
+ALTER TABLE questionnaire2s ADD INDEX questionnaire2s_user_id_index (user_id);
+ALTER TABLE questionnaire2s ADD INDEX questionnaire2s_task_date_index (task_date);
+ALTER TABLE questionnaire2s ADD INDEX questionnaire2s_status_index (status);
+
+-- For users table
+ALTER TABLE users ADD INDEX users_role_index (role);
+```
+
+Note: When running the SQL commands directly, you might get errors if the indexes already exist. You can ignore these errors.
 
 ## 5. Configure Nginx (via Amezmo Dashboard)
 

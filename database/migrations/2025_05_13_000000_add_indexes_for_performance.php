@@ -12,9 +12,17 @@ return new class extends Migration
      */
     private function indexExists($table, $indexName)
     {
-        $conn = Schema::getConnection()->getDoctrineSchemaManager();
-        $indexes = $conn->listTableIndexes($table);
-        return array_key_exists($indexName, $indexes);
+        // Use a direct SQL query to check if the index exists
+        $schema = DB::connection()->getDatabaseName();
+        $result = DB::select("
+            SELECT COUNT(*) as index_exists
+            FROM information_schema.statistics
+            WHERE table_schema = ?
+            AND table_name = ?
+            AND index_name = ?
+        ", [$schema, $table, $indexName]);
+
+        return $result[0]->index_exists > 0;
     }
 
     /**
